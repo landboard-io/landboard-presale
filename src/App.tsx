@@ -31,7 +31,7 @@ const App = () => {
           <Routes>
             <Route
               path={routeNames.unlock}
-              element={<UnlockPage loginRoute={routeNames.dashboard} />}
+              element={<UnlockPage loginRoute={routeNames.presale} />}
             />
             {routes.map((route: any, index: number) => (
               <Route

@@ -9,7 +9,7 @@
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
-    },
+    }
   },
   "settings": {
     "import/parsers": {
@@ -60,7 +60,7 @@
     "prettier/prettier": [
       "error",
       {
-        "endOfLine": "lf"
+        "endOfLine": "auto"
       }
     ],
     "@typescript-eslint/indent": "off",
@@ -70,7 +70,7 @@
     "react/jsx-one-expression-per-line": "off",
     "react/prop-types": "off",
     "react/display-name": "off",
-    "linebreak-style": ["error", "unix"],
+    "linebreak-style": ["error", "windows"],
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
     "object-curly-newline": "off",

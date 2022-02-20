@@ -1,41 +1,31 @@
-import { dAppName } from 'config';
+import Swap from 'pages/Swap';
 import withPageTitle from './components/PageTitle';
-import Dashboard from './pages/Dashboard';
 import Home from './pages/Home';
-import Transaction from './pages/Transaction';
 
 export const routeNames = {
-  home: '/',
-  dashboard: '/dashboard',
+  connect: '/connect',
   transaction: '/transaction',
   unlock: '/unlock',
   ledger: '/ledger',
-  walletconnect: '/walletconnect'
+  walletconnect: '/walletconnect',
+  presale: '/'
 };
 
 const routes: Array<any> = [
   {
-    path: routeNames.home,
-    title: 'Home',
+    path: routeNames.connect,
+    title: 'Connect',
     component: Home
   },
   {
-    path: routeNames.dashboard,
-    title: 'Dashboard',
-    component: Dashboard,
-    authenticatedRoute: true
-  },
-  {
-    path: routeNames.transaction,
-    title: 'Transaction',
-    component: Transaction
+    path: routeNames.presale,
+    title: 'Presale',
+    component: Swap
   }
 ];
 
 const mappedRoutes = routes.map((route) => {
-  const title = route.title
-    ? `${route.title} • Elrond ${dAppName}`
-    : `Elrond ${dAppName}`;
+  const title = route.title ? `${route.title} • Landboard` : 'Landboard';
 
   const requiresAuth = Boolean(route.authenticatedRoute);
   const wrappedComponent = withPageTitle(title, route.component);
