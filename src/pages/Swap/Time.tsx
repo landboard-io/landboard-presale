@@ -90,7 +90,7 @@ const Time = () => {
   return (
     <div>
       {' '}
-      <Countdown date={1645466400000} renderer={renderer} />
+      <Countdown date={1645380000000} renderer={renderer} />
     </div>
   );
 };
