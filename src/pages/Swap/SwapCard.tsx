@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useGetAccountInfo } from '@elrondnetwork/dapp-core';
+import {
+  refreshAccount,
+  sendTransactions,
+  useGetAccountInfo
+} from '@elrondnetwork/dapp-core';
+import { Balance } from '@elrondnetwork/erdjs/out';
 import {
   Box,
   Button,
@@ -10,6 +15,7 @@ import {
 } from '@mui/material';
 import Countdown from 'react-countdown';
 import { Link } from 'react-router-dom';
+import { contractAddress } from 'config.devnet';
 import data from './data.json';
 
 const SwapCard = () => {
@@ -125,6 +131,19 @@ const SwapCard = () => {
     );
   };
 
+  async function buyToken(e: any) {
+    e.preventDefault();
+    const tx = {
+      value: Balance.egld(amount),
+      data: 'buy',
+      receiver: contractAddress
+    };
+    await refreshAccount();
+    await sendTransactions({
+      transactions: tx
+    });
+  }
+
   function handleFromAmountChange(e: any) {
     e.preventDefault();
     setAmount(e.target.value);
@@ -194,6 +213,7 @@ const SwapCard = () => {
           textTransform: 'none',
           fontSize: 18
         }}
+        onClick={buyToken}
         disabled={error}
       >
         Buy
