@@ -8,7 +8,7 @@ const CurrentRound = () => {
   const [count, setCount] = useState(0);
   useEffect(() => {
     axios
-      .get(`https://devnet-api.elrond.com/accounts/${contractAddress}/tokens`)
+      .get(`https://api.elrond.com/accounts/${contractAddress}/tokens`)
       .then((res) => {
         setCount(res.data[0].balance);
       });
