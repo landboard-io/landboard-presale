@@ -4,7 +4,7 @@ import {
   sendTransactions,
   useGetAccountInfo
 } from '@elrondnetwork/dapp-core';
-import { Balance } from '@elrondnetwork/erdjs/out';
+import { Address, Balance, TransactionPayload } from '@elrondnetwork/erdjs/out';
 import {
   Box,
   Button,
