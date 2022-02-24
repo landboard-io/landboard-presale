@@ -16,7 +16,7 @@ const NextRound = () => {
       <Typography variant='h4'>Next round</Typography>
       <Box>
         <Typography variant='h6'>Price per token: 0.0003 $EGLD</Typography>
-        <Typography variant='h6'>Supply: 7500000 $LAND</Typography>
+        <Typography variant='h6'>Tokens supply: 7500000 $LAND</Typography>
         <Typography variant='h6'>Whitelisted addresses: TBD</Typography>
       </Box>
 
@@ -30,7 +30,7 @@ const NextRound = () => {
       >
         <a
           href='https://twitter.com/landboard_io'
-          style={{ width: '100%', color: '#fff' }}
+          style={{ width: '100%', color: '#fff', textDecoration: 'none' }}
         >
           Join the community!
         </a>

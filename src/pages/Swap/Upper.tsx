@@ -35,7 +35,7 @@ const Upper = () => {
             <Time />
           </Box>
           <Typography variant='h5' style={{ marginBottom: 15 }}>
-            500 / 500 whitelist spots filled
+            *for non-whitelisted addresses
           </Typography>
           <Box>
             <Typography variant='h6'>

@@ -2,17 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Box, Card, Typography } from '@mui/material';
 import ProgressBar from '@ramonak/react-progress-bar';
 import axios from 'axios';
-import { contractAddress } from 'config.devnet';
+import { contractAddress } from 'config';
 
 const CurrentRound = () => {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    axios
-      .get(`https://api.elrond.com/accounts/${contractAddress}/tokens`)
-      .then((res) => {
-        setCount(res.data[0].balance);
-      });
-  });
+  const [count, setCount] = useState(2500000);
+
   return (
     <Card
       style={{
@@ -36,7 +30,7 @@ const CurrentRound = () => {
         <Typography variant='body1'>
           {count} tokens sold out of 2500000
         </Typography>
-        <ProgressBar completed={0} maxCompleted={2500000} />
+        <ProgressBar completed={100} maxCompleted={100} />
       </Box>
     </Card>
   );

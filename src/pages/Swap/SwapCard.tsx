@@ -4,7 +4,7 @@ import {
   sendTransactions,
   useGetAccountInfo
 } from '@elrondnetwork/dapp-core';
-import { Address, Balance, TransactionPayload } from '@elrondnetwork/erdjs/out';
+import { Balance } from '@elrondnetwork/erdjs/out';
 import {
   Box,
   Button,
@@ -13,9 +13,10 @@ import {
   Typography,
   Container
 } from '@mui/material';
+import axios from 'axios';
 import Countdown from 'react-countdown';
 import { Link } from 'react-router-dom';
-import { contractAddress } from 'config.devnet';
+import { contractAddress } from 'config';
 import data from './data.json';
 
 const SwapCard = () => {
@@ -26,14 +27,12 @@ const SwapCard = () => {
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
   const [error, setError] = useState(false);
   const [isWhitelisted, setIsWhitelisted] = useState(false);
+  const [landBalance, setLandBalance] = useState(0);
+  const [isOver, setIsOver] = useState(false);
 
+  const counterDate = 1645550940000;
   const exchangeRate = 0.0002;
   let toAmount, fromAmount;
-
-  //   interface timeProps {
-  //     number: number;
-  //     time: string;
-  //   }
 
   interface timeProps {
     days: number;
@@ -42,7 +41,10 @@ const SwapCard = () => {
     seconds: number;
     completed: boolean;
   }
-  const Completionist = () => <span>You are good to go!</span>;
+  const Completionist = () => {
+    return <span>You can now buy!</span>;
+  };
+
   const renderer: React.FC<timeProps> = ({
     days,
     hours,
@@ -51,7 +53,6 @@ const SwapCard = () => {
     completed
   }) => {
     if (completed) {
-      // Render a completed state
       return <Completionist />;
     } else {
       // Render a countdown
@@ -71,21 +72,27 @@ const SwapCard = () => {
       );
     }
   };
-  const checkIfBigger = (amount: any) => {
-    if (amountInFromCurrency) {
-      Number(amount) > 5000
-        ? setError(true)
-        : Number(amount) < 1000
-        ? setError(true)
-        : setError(false);
+
+  const checkIfBigger = () => {
+    if (!isWhitelisted) {
+      setError(true);
     } else {
-      Number(amount) > 1
-        ? setError(true)
-        : Number(amount) < 0.2
-        ? setError(true)
-        : setError(false);
+      if (amountInFromCurrency) {
+        Number(amount) > 5000
+          ? setError(true)
+          : Number(amount) < 1000
+          ? setError(true)
+          : setError(false);
+      } else {
+        Number(amount) > 1 - landBalance / 1000
+          ? setError(true)
+          : Number(amount) < 0.2
+          ? setError(true)
+          : setError(false);
+      }
     }
   };
+
   if (amountInFromCurrency) {
     fromAmount = amount;
     toAmount = amount * exchangeRate;
@@ -110,8 +117,36 @@ const SwapCard = () => {
   }, []);
 
   useEffect(() => {
-    checkIfBigger(amount);
+    axios
+      .get(`https://api.elrond.com/accounts/${account.address}/tokens`)
+      .then((res) => {
+        setLandBalance(
+          res.data.filter((a: any) => a.identifier === 'LAND-40f26f')[0]
+            .balance /
+            10 ** 18
+        );
+      });
+  }, []);
+
+  useEffect(() => {
+    checkIfBigger();
   }, [amount]);
+
+  useEffect(() => {
+    Date.now() > counterDate && setIsOver(true);
+  }, []);
+
+  useEffect(() => {
+    isOver && setIsWhitelisted(true);
+  }, [isOver]);
+
+  // useEffect(() => {
+  //   isWhitelisted && setError(false);
+  // }, [isWhitelisted]);
+
+  useEffect(() => {
+    !isWhitelisted && setError(true);
+  }, [isWhitelisted]);
 
   const CurrencyRow: React.FC<Props> = ({ onChangeAmount, amount, type }) => {
     return (
@@ -123,12 +158,17 @@ const SwapCard = () => {
           onChange={onChangeAmount}
           style={{ width: '100%', padding: 10, borderRadius: 15 }}
           variant='outlined'
+          disabled={type === 'LAND'}
         />
         <div style={{ position: 'absolute', right: '15%', top: '35%' }}>
           {type}
         </div>
       </div>
     );
+  };
+
+  const handleMaxAmount = () => {
+    setAmount(5000 - landBalance * 5);
   };
 
   async function buyToken(e: any) {
@@ -178,19 +218,27 @@ const SwapCard = () => {
         }}
       >
         {CurrencyRow({
+          selectedCurrency: toCurrency,
+          onChangeAmount: handleToAmountChange,
+          amount: toAmount,
+          type: 'EGLD'
+        })}
+
+        <div style={{ textAlign: 'center' }}>=</div>
+        {CurrencyRow({
           selectedCurrency: fromCurrency,
           onChangeAmount: handleFromAmountChange,
           amount: fromAmount,
           type: 'LAND'
         })}
 
-        <div style={{ textAlign: 'center' }}>=</div>
-        {CurrencyRow({
-          selectedCurrency: toCurrency,
-          onChangeAmount: handleToAmountChange,
-          amount: toAmount,
-          type: 'EGLD'
-        })}
+        <Button
+          variant='text'
+          style={{ textTransform: 'none' }}
+          onClick={handleMaxAmount}
+        >
+          Max
+        </Button>
 
         <Typography variant='body1' style={{ marginTop: 10 }}>
           {' '}
@@ -199,6 +247,13 @@ const SwapCard = () => {
             5
           )}{' '}
           EGLD
+        </Typography>
+        <Typography variant='body1'>
+          {' '}
+          You own: {parseFloat(Number(landBalance * 5).toString()).toFixed(
+            2
+          )}{' '}
+          LAND
         </Typography>
         <Typography>Min buy: 0.2 EGLD</Typography>
         <Typography>Max buy: 1 EGLD</Typography>
@@ -213,27 +268,12 @@ const SwapCard = () => {
           textTransform: 'none',
           fontSize: 18
         }}
-        onClick={buyToken}
-        disabled={error}
+        disabled
       >
-        Buy
+        Sold out
       </Button>
       <Typography variant='body1'> 1 EGLD = 5000 LAND</Typography>
-
-      {account?.address === '' ? (
-        <>
-          <Link to='/connect'>Log in</Link>
-        </>
-      ) : !isWhitelisted ? (
-        'You are not in the whitelist.'
-      ) : (
-        <>
-          <Typography variant='h6' style={{ marginTop: 10 }}>
-            Your address is whitelisted!
-          </Typography>
-          <Countdown date={1645380000000} renderer={renderer} />
-        </>
-      )}
+      {}
     </Card>
   );
 };

@@ -39,58 +39,46 @@ const Time = () => {
     seconds: number;
     completed: boolean;
   }
-  const Completionist = () => <span>You are good to go!</span>;
-  const renderer: React.FC<Props> = ({
-    days,
-    hours,
-    minutes,
-    seconds,
-    completed
-  }) => {
-    if (completed) {
-      // Render a completed state
-      return <Completionist />;
-    } else {
-      // Render a countdown
-      return (
-        <Container
+
+  const renderer: React.FC<Props> = ({ days, hours, minutes, seconds }) => {
+    return (
+      <Container
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          width: '80%',
+          marginTop: 20
+        }}
+      >
+        <Grid
+          container
+          spacing={2}
           style={{
+            alignItems: 'center',
             display: 'flex',
-            justifyContent: 'center',
-            width: '80%',
-            marginTop: 20
+            justifyContent: 'space-between'
           }}
         >
-          <Grid
-            container
-            spacing={2}
-            style={{
-              alignItems: 'center',
-              display: 'flex',
-              justifyContent: 'space-between'
-            }}
-          >
-            <Grid item md={3} xs={12} sm={6}>
-              <TimeDisplay number={days} time='Days' />
-            </Grid>
-            <Grid item md={3} xs={12} sm={6}>
-              <TimeDisplay number={hours} time='Hours' />
-            </Grid>
-            <Grid item md={3} xs={12} sm={6}>
-              <TimeDisplay number={minutes} time='Minutes' />
-            </Grid>
-            <Grid item md={3} xs={12} sm={6}>
-              <TimeDisplay number={seconds} time='Seconds' />
-            </Grid>
+          <Grid item md={3} xs={12} sm={6}>
+            <TimeDisplay number={days} time='Days' />
           </Grid>
-        </Container>
-      );
-    }
+          <Grid item md={3} xs={12} sm={6}>
+            <TimeDisplay number={hours} time='Hours' />
+          </Grid>
+          <Grid item md={3} xs={12} sm={6}>
+            <TimeDisplay number={minutes} time='Minutes' />
+          </Grid>
+          <Grid item md={3} xs={12} sm={6}>
+            <TimeDisplay number={seconds} time='Seconds' />
+          </Grid>
+        </Grid>
+      </Container>
+    );
   };
   return (
     <div>
       {' '}
-      <Countdown date={1645380000000} renderer={renderer} />
+      <Countdown date={1645552800000} renderer={renderer} />
     </div>
   );
 };
